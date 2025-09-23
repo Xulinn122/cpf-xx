@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "@sparticuz/chromium": "^138.0.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "puppeteer": "^24.22.0"
+    "puppeteer": "^24.22.0",
+    "puppeteer-core": "^24.22.2"
   },
   "scripts": {
     "start": "node api.js"

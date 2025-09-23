@@ -1,4 +1,5 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
 const fs = require("fs");
 
 const CREDENTIALS = { usuario: "2300869KAMYLA", senha: "Xulinn_777" };
@@ -6,8 +7,12 @@ const BROWSER_OPTIONS = {
   headless: true,
   defaultViewport: null,
   slowMo: 50,
-  executablePath: puppeteer.executablePath(), // <<< usa o Chromium interno
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
+  executablePath: await chromium.executablePath(), // usa o Chromium do ambiente
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    ...chromium.args
+  ]
 };
 
 async function delay(ms) {
