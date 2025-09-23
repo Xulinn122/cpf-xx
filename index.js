@@ -4,16 +4,12 @@ const fs = require("fs");
 
 const CREDENTIALS = { usuario: "2300869KAMYLA", senha: "Xulinn_777" };
 const BROWSER_OPTIONS = {
-  headless: true,
-  defaultViewport: null,
-  slowMo: 50,
-  executablePath: await chromium.executablePath(), // usa o Chromium do ambiente
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    ...chromium.args
-  ]
+  headless: chromium.headless,
+  defaultViewport: chromium.defaultViewport,
+  args: chromium.args,
+  executablePath: chromium.executablePath(), // ✅ sem await
 };
+
 
 async function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
