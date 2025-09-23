@@ -1,13 +1,11 @@
 {
-  "name": "minha-api",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "puppeteer": "^24.22.0"
+  },
+  "scripts": {
+    "start": "node api.js",
+    "postinstall": "npx puppeteer install chromium"
   }
 }

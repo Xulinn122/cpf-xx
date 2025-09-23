@@ -3,9 +3,10 @@ const fs = require("fs");
 
 const CREDENTIALS = { usuario: "2300869KAMYLA", senha: "Xulinn_777" };
 const BROWSER_OPTIONS = {
-  headless: true,             // Mudança feita: headless true
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  executablePath: process.env.CHROME_PATH || '/usr/bin/chromium-browser',
   defaultViewport: null,
-  args: ["--no-sandbox", "--disable-setuid-sandbox"], // necessário pro Render
   slowMo: 50
 };
 
