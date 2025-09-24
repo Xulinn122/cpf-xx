@@ -19,12 +19,20 @@ async function openCNS(cpf) {
   }
 
   // Puppeteer com Chromium do Sparticuz
-  const BROWSER_OPTIONS = {
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    defaultViewport: null,
-    executablePath: await chromium.executablePath(), // ✅ aqui dentro do async
-  };
+const BROWSER_OPTIONS = {
+  headless: true,
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-extensions",
+    "--disable-gpu",
+    "--single-process",
+    "--no-zygote"
+  ],
+  defaultViewport: null,
+  executablePath: await chromium.executablePath(),
+};
 
   const browser = await puppeteer.launch(BROWSER_OPTIONS);
   const page = await browser.newPage();
@@ -32,7 +40,7 @@ async function openCNS(cpf) {
   // resto do seu código...
   try {
     // LOGIN
-    await page.goto("https://sisregiii.saude.gov.br", { waitUntil: "networkidle2", timeout: 60000 });
+    await page.goto("https://sisregiii.saude.gov.br", { waitUntil: "networkidle2", timeout: 12000 });
     await page.evaluate((usuario, senha) => {
       document.querySelector("#usuario").value = usuario;
       document.querySelector("#senha").value = senha;
