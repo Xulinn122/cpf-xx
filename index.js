@@ -40,7 +40,7 @@ const BROWSER_OPTIONS = {
   // resto do seu código...
   try {
     // LOGIN
-    await page.goto("https://sisregiii.saude.gov.br", { waitUntil: "networkidle2", timeout: 12000 });
+    await page.goto("https://sisregiii.saude.gov.br", { waitUntil: "networkidle2", timeout: 120000 });
     await page.evaluate((usuario, senha) => {
       document.querySelector("#usuario").value = usuario;
       document.querySelector("#senha").value = senha;
