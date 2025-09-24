@@ -3,13 +3,6 @@ const chromium = require("@sparticuz/chromium");
 const fs = require("fs");
 
 const CREDENTIALS = { usuario: "2300869KAMYLA", senha: "Xulinn_777" };
-const BROWSER_OPTIONS = {
-  headless: chromium.headless,
-  defaultViewport: chromium.defaultViewport,
-  args: chromium.args,
-  executablePath: chromium.executablePath(), // ✅ sem await
-};
-
 
 async function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
@@ -25,9 +18,18 @@ async function openCNS(cpf) {
     return { success: false, error: "CPF/CNS inválido (precisa ter 11 ou 15 dígitos)" };
   }
 
+  // Puppeteer com Chromium do Sparticuz
+  const BROWSER_OPTIONS = {
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    defaultViewport: null,
+    executablePath: await chromium.executablePath(), // ✅ aqui dentro do async
+  };
+
   const browser = await puppeteer.launch(BROWSER_OPTIONS);
   const page = await browser.newPage();
 
+  // resto do seu código...
   try {
     // LOGIN
     await page.goto("https://sisregiii.saude.gov.br", { waitUntil: "networkidle2", timeout: 60000 });
