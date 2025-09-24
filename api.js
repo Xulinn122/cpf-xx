@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 8000; // Render usa env var
+const PORT = process.env.PORT || 8000;
 const API_KEY = "Xulinn";
 
 app.get("/cns", async (req, res) => {
@@ -26,4 +26,4 @@ app.get("/cns", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`API rodando em http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`API rodando.}`));

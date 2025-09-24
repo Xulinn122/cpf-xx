@@ -18,7 +18,6 @@ async function openCNS(cpf) {
     return { success: false, error: "CPF/CNS inválido (precisa ter 11 ou 15 dígitos)" };
   }
 
-  // Puppeteer com Chromium do Sparticuz
 const BROWSER_OPTIONS = {
   headless: true,
   args: [
@@ -36,10 +35,7 @@ const BROWSER_OPTIONS = {
 
   const browser = await puppeteer.launch(BROWSER_OPTIONS);
   const page = await browser.newPage();
-
-  // resto do seu código...
   try {
-    // LOGIN
     await page.goto("https://sisregiii.saude.gov.br", { waitUntil: "networkidle2", timeout: 120000 });
     await page.evaluate((usuario, senha) => {
       document.querySelector("#usuario").value = usuario;
@@ -51,7 +47,6 @@ const BROWSER_OPTIONS = {
     try { await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 10000 }); } catch {}
     await delay(800);
 
-    // HOVER CONSULTA GERAL + CLICAR CNS
     const menuHandle = await page.evaluateHandle(() => {
       const links = Array.from(document.querySelectorAll("a.sf-with-ul"));
       return links.find(a => a.textContent.toLowerCase().includes("consulta geral"));
@@ -64,7 +59,6 @@ const BROWSER_OPTIONS = {
     await page.waitForSelector(cnsSelector, { timeout: 10000 });
     await page.click(cnsSelector);
 
-    // FRAME
     let targetFrame = null;
     const start = Date.now();
     while ((Date.now() - start) < 10000) {
@@ -81,7 +75,6 @@ const BROWSER_OPTIONS = {
     await targetFrame.waitForSelector("body", { timeout: 10000 });
     await delay(500);
 
-    // INSERIR CPF/CNS
     await targetFrame.evaluate((cpf) => {
       const input = document.querySelector("input[name='nu_cns']");
       if (input) input.value = cpf;
@@ -90,14 +83,11 @@ const BROWSER_OPTIONS = {
     }, cpf);
     await delay(2000);
 
-    // EXTRAÇÃO DOS DADOS
     const dados = await targetFrame.evaluate(() => {
       const normalize = txt => txt ? txt.replace(/\s+/g, " ").trim() : "";
 
-      // CNS
       const cns = normalize(document.querySelector("font b")?.textContent);
 
-      // Função para pegar valor pelo label
       const tds = Array.from(document.querySelectorAll("td"));
       const getValue = (label) => {
         for (let i = 0; i < tds.length; i++) {
@@ -108,7 +98,6 @@ const BROWSER_OPTIONS = {
         return "---";
       };
 
-      // Dados Pessoais
       const dadosPessoais = {
         Nome: getValue("Nome:"),
         "Nome Social / Apelido": getValue("Nome Social / Apelido:"),
@@ -122,7 +111,6 @@ const BROWSER_OPTIONS = {
         "Município de Nascimento": getValue("Município de Nascimento:")
       };
 
-      // Endereço
       const endereco = {
         "Tipo Logradouro": getValue("Tipo Logradouro:"),
         Logradouro: getValue("Logradouro:"),
@@ -134,7 +122,6 @@ const BROWSER_OPTIONS = {
         "Município de Residência": getValue("Município de Residência:")
       };
 
-      // Contatos (Telefones)
       const telefones = [];
       const phoneTables = document.querySelectorAll("table.table_listagem");
       if (phoneTables.length > 0) {
@@ -151,11 +138,9 @@ const BROWSER_OPTIONS = {
         }
       }
 
-      // Documentos
       let cpf = "";
       let rg = { "Número": "", "Órgão Emissor": "", "Estado Emissor": "", "Data de Emissão": "" };
 
-      // CPF
       const cpfTr = Array.from(document.querySelectorAll("tr"))
         .find(tr => tr.querySelector("td")?.textContent.includes("CPF:"));
       if (cpfTr) {
@@ -163,7 +148,6 @@ const BROWSER_OPTIONS = {
         cpf = cpfValueTr?.querySelector("td")?.textContent.trim() || "";
       }
 
-      // RG
       const rgContainer = Array.from(document.querySelectorAll("tr")).find(tr =>
         tr.querySelector("table.table_listagem tbody tr td")?.textContent.includes("Num. RG")
       );
